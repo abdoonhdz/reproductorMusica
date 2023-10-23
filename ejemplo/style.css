@@ -1,0 +1,28 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	color: white;
+}
+
+#contenedor{
+	background: #da91ff;
+	height: 100vh;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+    justify-content: center;
+	align-content: center;
+	gap: 20px;
+}
+
+	.boton{
+		background: #9526ce;
+		width: 20%;
+		min-width: 200px;
+		height: 100px;
+		display: flex;
+		justify-content: center;
+    	align-items: center;
+    	cursor: pointer;
+	}
