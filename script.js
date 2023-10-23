@@ -8,6 +8,7 @@ const aleatorioButton = document.getElementById("aleatorio");
 const bucleButton = document.getElementById("bucle");
 const listaCanciones = document.getElementById("lista-canciones");
 const contenedor = document.getElementById("contenedor");
+const volumenControl = document.getElementById("volumen");
 const sonidos = [
     {
         id: 'El Farsante Mambo Remix',
@@ -57,6 +58,7 @@ function cargarCancion(index) {
         const cancionPrev = document.getElementById(cancionActual.id);
         cancionPrev.pause();
         cancionPrev.currentTime = 0;
+        progreso.style.width = '0%'; // Reinicia la barra de progreso
     }
     cancionActual = sonidos[index];
     const cancion = document.getElementById(cancionActual.id);
@@ -64,6 +66,7 @@ function cargarCancion(index) {
     imagenCancion.src = cancionActual.imageSrc;
     cancion.src = cancionActual.src;
     cancion.load();
+    cancion.play(); // Reproducir la nueva canción
 }
 
 playButton.addEventListener('click', () => {
@@ -109,14 +112,30 @@ bucleButton.addEventListener('click', () => {
     }
 });
 
-document.getElementById(cancionActual.id).addEventListener('timeupdate', () => {
-    const cancion = document.getElementById(cancionActual.id);
-    const progress = (cancion.currentTime / cancion.duration) * 100;
-    progreso.style.width = progress + '%';
+sonidos.forEach((sonido) => {
+    const cancion = document.getElementById(sonido.id);
+    cancion.addEventListener('timeupdate', () => {
+        const progress = (cancion.currentTime / cancion.duration) * 100;
+        progreso.style.width = progress + '%';
+    });
+
+    cancion.addEventListener('ended', () => {
+        if (!cancion.loop) {
+            if (cancionIndex < sonidos.length - 1) {
+                cargarCancion(cancionIndex + 1);
+            }
+        }
+    });
 });
 
-document.getElementById(cancionActual.id).addEventListener('ended', () => {
-    if (!document.getElementById(cancionActual.id).loop) {
-        siguienteButton.click();
-    }
+volumenControl.addEventListener("input", () => {
+    const cancion = document.getElementById(cancionActual.id);
+    cancion.volume = volumenControl.value;
 });
+
+volumenControl.value = cancionActual.volume;
+
+cancionActual.addEventListener("volumechange", () => {
+    volumenControl.value = cancionActual.volume;
+});
+
